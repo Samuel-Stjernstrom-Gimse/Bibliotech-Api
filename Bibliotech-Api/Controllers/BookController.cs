@@ -75,8 +75,4 @@ public class BookController : Controller
         
         return Ok();
     }
-    
-    
-    
-    
 }

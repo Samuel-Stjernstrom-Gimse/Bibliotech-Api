@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v69.420.666",
         Title = "Bibliotech API",
-        Description = "Samuel's API med innebygget AIDS",
+        Description = "Library API",
     });
 });
 
