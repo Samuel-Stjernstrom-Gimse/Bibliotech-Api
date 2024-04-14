@@ -1,7 +1,10 @@
+using Bibliotech_Api.Access;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<LocalDbContext>(optionsBuilder => optionsBuilder.UseSqlite("Data Source=test.db"));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

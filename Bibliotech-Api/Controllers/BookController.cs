@@ -8,13 +8,13 @@ namespace Bibliotech_Api.Controllers;
 public class BookController : Controller
 {
     private const string Database = "database.json";
-    private readonly List<Book> _books = LoadBooks();
+    private readonly List<Books> _books = LoadBooks();
 
-    private static List<Book> LoadBooks()
+    private static List<Books> LoadBooks()
     {
         if (!System.IO.File.Exists(Database)) return [];
         var databaseJson = System.IO.File.ReadAllText(Database);
-        return JsonSerializer.Deserialize<List<Book>>(databaseJson) ?? [];
+        return JsonSerializer.Deserialize<List<Books>>(databaseJson) ?? [];
     }
 
     private void SaveBooks()
@@ -31,9 +31,9 @@ public class BookController : Controller
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] Book book)
+    public IActionResult Post([FromBody] Books books)
     {
-        var newBook = new Book(book.Title, book.Author, book.Year);
+        var newBook = new Books(books.title, books.author, books.year);
         
         _books.Add(newBook);
         SaveBooks();
@@ -43,17 +43,17 @@ public class BookController : Controller
 
     [HttpPatch]
     [Route("{id:guid}")]
-    public IActionResult Patch([FromBody] Book book, [FromRoute] Guid id)
+    public IActionResult Patch([FromBody] Books books, [FromRoute] Guid id)
     {
-        var bookToPatch = _books.FirstOrDefault(b => b.Id == id);
+        var bookToPatch = _books.FirstOrDefault(b => b.id == id);
         if (bookToPatch == null)
         {
-            return NotFound($"{book.Id} not found");
+            return NotFound($"{books.id} not found");
         }
 
-        bookToPatch.Title = book.Title;
-        bookToPatch.Author = book.Author;
-        bookToPatch.Year = book.Year;
+        bookToPatch.title = books.title;
+        bookToPatch.author = books.author;
+        bookToPatch.year = books.year;
         
         SaveBooks();
         return Ok(bookToPatch);
@@ -63,7 +63,7 @@ public class BookController : Controller
     [Route("{id:guid}")]
     public IActionResult Delete([FromRoute] Guid id)
     {
-        var bookToDelete = _books.FirstOrDefault(b => b.Id == id);
+        var bookToDelete = _books.FirstOrDefault(b => b.id == id);
         
         if (bookToDelete == null)
         {
