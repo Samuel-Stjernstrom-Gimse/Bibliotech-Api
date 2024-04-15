@@ -25,6 +25,14 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bibliotech API");
     c.RoutePrefix = string.Empty;
 });
+
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin();
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+});
+
 app.UseRouting();
 app.UseAuthorization();
 
