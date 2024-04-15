@@ -7,7 +7,6 @@ namespace Bibliotech_Api.Controllers;
 [Route("book")]
 public class BookController(LocalDbContext context) : Controller
 {
-    
     [HttpGet]
     public IActionResult Get()
     {
