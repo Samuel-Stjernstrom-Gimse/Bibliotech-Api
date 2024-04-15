@@ -15,15 +15,12 @@ public class UserController(LocalDbContext context) : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostUser([FromBody] Users user)
+    [Route("/users")]
+    public IActionResult PostUser([FromBody] Users user)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         context.users.Add(user);
-        await context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetUsers), new { id = user.id }, user);
+        context.SaveChanges();
+        
+        return Ok(user);
     }
 }
