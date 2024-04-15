@@ -1,51 +1,32 @@
-using System.Text.Json;
+using Bibliotech_Api.Access;
 using Bibliotech_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bibliotech_Api.Controllers;
 
 [Route("book")]
-public class BookController : Controller
+public class BookController(LocalDbContext context) : Controller
 {
-    private const string Database = "database.json";
-    private readonly List<Books> _books = LoadBooks();
-
-    private static List<Books> LoadBooks()
-    {
-        if (!System.IO.File.Exists(Database)) return [];
-        var databaseJson = System.IO.File.ReadAllText(Database);
-        return JsonSerializer.Deserialize<List<Books>>(databaseJson) ?? [];
-    }
-
-    private void SaveBooks()
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        var json = JsonSerializer.Serialize(_books, options);
-        System.IO.File.WriteAllText(Database, json);
-    }
-
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(_books);
+        return Ok(context.books);
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] Books books)
+    public IActionResult Post([FromBody] Books book)
     {
-        var newBook = new Books(books.title, books.author, books.year);
+        context.books.Add(book);
+        context.SaveChanges();
         
-        _books.Add(newBook);
-        SaveBooks();
-        
-        return Ok(newBook);
+        return Ok(book.title);
     }
 
     [HttpPatch]
     [Route("{id:guid}")]
     public IActionResult Patch([FromBody] Books books, [FromRoute] Guid id)
     {
-        var bookToPatch = _books.FirstOrDefault(b => b.id == id);
+        var bookToPatch = context.books.FirstOrDefault(b => b.id == id);
         if (bookToPatch == null)
         {
             return NotFound($"{books.id} not found");
@@ -54,8 +35,8 @@ public class BookController : Controller
         bookToPatch.title = books.title;
         bookToPatch.author = books.author;
         bookToPatch.year = books.year;
-        
-        SaveBooks();
+
+        context.SaveChanges();
         return Ok(bookToPatch);
     }
 
@@ -63,15 +44,15 @@ public class BookController : Controller
     [Route("{id:guid}")]
     public IActionResult Delete([FromRoute] Guid id)
     {
-        var bookToDelete = _books.FirstOrDefault(b => b.id == id);
+        var bookToDelete = context.books.FirstOrDefault(b => b.id == id);
         
         if (bookToDelete == null)
         {
             return NotFound("not found");
         }
 
-        _books.Remove(bookToDelete);
-        SaveBooks();
+        context.books.Remove(bookToDelete);
+        context.SaveChanges();
         
         return Ok();
     }
