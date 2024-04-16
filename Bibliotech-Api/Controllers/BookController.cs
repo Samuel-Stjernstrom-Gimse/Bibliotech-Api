@@ -41,14 +41,14 @@ public class BookController(LocalDbContext context) : Controller
     }
 
     [HttpDelete]
-    [Route("{id:guid}")]
+    [Route("/book/{id}")]
     public IActionResult Delete([FromRoute] Guid id)
     {
         var bookToDelete = context.books.FirstOrDefault(b => b.id == id);
         
         if (bookToDelete == null)
         {
-            return NotFound("not found");
+            return NotFound("not found" );
         }
 
         context.books.Remove(bookToDelete);
