@@ -1,4 +1,5 @@
-﻿using Bibliotech_Api.Access;
+﻿using System.Text;
+using Bibliotech_Api.Access;
 using Bibliotech_Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +16,21 @@ public class UserController(LocalDbContext context) : Controller
     }
 
     [HttpPost]
-    [Route("/users")]
     public IActionResult PostUser([FromBody] Users user)
     {
+        var password = user.password;
+        var bytes = Encoding.UTF8.GetBytes(password);
+        var hashedPassword = Convert.ToBase64String(bytes);
+        user.password = hashedPassword;
+        
         context.users.Add(user);
         context.SaveChanges();
         
         return Ok(user);
     }
-    
+
     [HttpPatch]
-    [Route("/users/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult PatchUser([FromBody] Users user, [FromRoute] int id)
     {
         var existingUser = context.users.FirstOrDefault(u => u.id == id);
@@ -40,12 +45,12 @@ public class UserController(LocalDbContext context) : Controller
         existingUser.password = user.password;
 
         context.SaveChanges();
-    
+
         return Ok(existingUser);
     }
 
     [HttpDelete]
-    [Route("/users/{id:int}")]
+    [Route("{id:int}")]
     public IActionResult DeleteUser([FromRoute] int id)
     {
         var user = context.users.FirstOrDefault(u => u.id == id);
@@ -57,8 +62,8 @@ public class UserController(LocalDbContext context) : Controller
 
         context.users.Remove(user);
         context.SaveChanges();
-    
+
         return Ok();
     }
+    
 }
-

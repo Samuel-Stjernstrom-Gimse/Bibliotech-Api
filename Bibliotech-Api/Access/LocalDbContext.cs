@@ -15,4 +15,5 @@ public class LocalDbContext : DbContext
 
     public DbSet<Books> books { get; set; }
     public DbSet<Users> users { get; set; }
+    public DbSet<Booking> booking { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿
-
-namespace Bibliotech_Api.Models;
+﻿namespace Bibliotech_Api.Models;
 
 public record Users
 {

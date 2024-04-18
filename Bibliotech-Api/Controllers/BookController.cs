@@ -10,7 +10,7 @@ public class BookController(LocalDbContext context) : Controller
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(context.books);
+        return Ok(context.books.OrderBy(id => id));
     }
 
     [HttpPost]
@@ -19,7 +19,7 @@ public class BookController(LocalDbContext context) : Controller
         context.books.Add(book);
         context.SaveChanges();
         
-        return Ok(book.title);
+        return Ok(book);
     }
 
     [HttpPatch]
