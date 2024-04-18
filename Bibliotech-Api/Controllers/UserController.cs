@@ -33,7 +33,7 @@ public class UserController(LocalDbContext context) : Controller
     [Route("{id:int}")]
     public IActionResult PatchUser([FromBody] Users user, [FromRoute] int id)
     {
-        var existingUser = context.users.FirstOrDefault(u => u.id == id);
+        var existingUser = context.users.FirstOrDefault(u => u.user_id == id);
 
         if (existingUser == null)
         {
@@ -53,7 +53,7 @@ public class UserController(LocalDbContext context) : Controller
     [Route("{id:int}")]
     public IActionResult DeleteUser([FromRoute] int id)
     {
-        var user = context.users.FirstOrDefault(u => u.id == id);
+        var user = context.users.FirstOrDefault(u => u.user_id == id);
 
         if (user == null)
         {

@@ -26,10 +26,10 @@ public class BookController(LocalDbContext context) : Controller
     [Route("{id:int}")]
     public IActionResult Patch([FromBody] Books books, [FromRoute] int id)
     {
-        var bookToPatch = context.books.FirstOrDefault(b => b.id == id);
+        var bookToPatch = context.books.FirstOrDefault(b => b.book_id == id);
         if (bookToPatch == null)
         {
-            return NotFound($"{books.id} not found");
+            return NotFound($"{books.book_id} not found");
         }
 
         bookToPatch.title = books.title;
@@ -44,7 +44,7 @@ public class BookController(LocalDbContext context) : Controller
     [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)
     {
-        var bookToDelete = context.books.FirstOrDefault(b => b.id == id);
+        var bookToDelete = context.books.FirstOrDefault(b => b.book_id == id);
         
         if (bookToDelete == null)
         {

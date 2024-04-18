@@ -11,15 +11,15 @@ public class BookingController(LocalDbContext context) : Controller
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(context.booking);
+        return Ok(context.bookings);
     }
 
     [HttpPost]
-    public IActionResult PostBooking([FromBody] Booking booking)
+    public IActionResult PostBooking([FromBody] Bookings bookings)
     {
-        context.booking.Add(booking);
+        context.bookings.Add(bookings);
         context.SaveChanges();
         
-        return Ok(booking.booking_id);
+        return Ok(bookings.booking_id);
     }
 }
