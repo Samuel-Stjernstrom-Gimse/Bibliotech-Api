@@ -23,8 +23,8 @@ public class BookController(LocalDbContext context) : Controller
     }
 
     [HttpPatch]
-    [Route("{id:guid}")]
-    public IActionResult Patch([FromBody] Books books, [FromRoute] Guid id)
+    [Route("{id:int}")]
+    public IActionResult Patch([FromBody] Books books, [FromRoute] int id)
     {
         var bookToPatch = context.books.FirstOrDefault(b => b.id == id);
         if (bookToPatch == null)
@@ -41,8 +41,8 @@ public class BookController(LocalDbContext context) : Controller
     }
 
     [HttpDelete]
-    [Route("/book/{id}")]
-    public IActionResult Delete([FromRoute] Guid id)
+    [Route("{id:int}")]
+    public IActionResult Delete([FromRoute] int id)
     {
         var bookToDelete = context.books.FirstOrDefault(b => b.id == id);
         
