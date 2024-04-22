@@ -14,7 +14,7 @@ public class BookController(LocalDbContext context) : Controller
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] Books book)
+    public IActionResult Post([FromBody] Book book)
     {
         context.books.Add(book);
         context.SaveChanges();
@@ -24,17 +24,17 @@ public class BookController(LocalDbContext context) : Controller
 
     [HttpPatch]
     [Route("{id:int}")]
-    public IActionResult Patch([FromBody] Books books, [FromRoute] int id)
+    public IActionResult Patch([FromBody] Book book, [FromRoute] int id)
     {
-        var bookToPatch = context.books.FirstOrDefault(b => b.book_id == id);
+        var bookToPatch = context.books.FirstOrDefault(b => b.Id == id);
         if (bookToPatch == null)
         {
-            return NotFound($"{books.book_id} not found");
+            return NotFound($"{book.Id} not found");
         }
 
-        bookToPatch.title = books.title;
-        bookToPatch.author = books.author;
-        bookToPatch.year = books.year;
+        bookToPatch.Title = book.Title;
+        bookToPatch.Author = book.Author;
+        bookToPatch.Year = book.Year;
 
         context.SaveChanges();
         return Ok(bookToPatch);
@@ -44,7 +44,7 @@ public class BookController(LocalDbContext context) : Controller
     [Route("{id:int}")]
     public IActionResult Delete([FromRoute] int id)
     {
-        var bookToDelete = context.books.FirstOrDefault(b => b.book_id == id);
+        var bookToDelete = context.books.FirstOrDefault(b => b.Id == id);
         
         if (bookToDelete == null)
         {

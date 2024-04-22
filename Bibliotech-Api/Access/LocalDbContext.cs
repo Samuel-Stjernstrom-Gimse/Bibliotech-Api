@@ -13,21 +13,31 @@ public class LocalDbContext : DbContext
     {
     }
 
-    public DbSet<Books> books { get; set; }
-    public DbSet<Users> users { get; set; }
-    public DbSet<Bookings> bookings { get; set; }
+    public DbSet<Book> books { get; set; }
+    public DbSet<User> users { get; set; }
+    public DbSet<Booking> bookings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Bookings>()
-            .HasOne(b => b.user)
+        modelBuilder.Entity<Booking>()
+            .HasKey(b => b.Id);
+
+        modelBuilder.Entity<Booking>()
+            .Property(b => b.Id)
+            .ValueGeneratedOnAdd();
+        
+        modelBuilder.Entity<Booking>()
+            .HasOne(b => b.User)
             .WithMany()
-            .HasForeignKey(b => b.user_id)
+            .HasForeignKey(b => b.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<Bookings>()
-            .HasOne(b => b.book)
+
+        modelBuilder.Entity<Booking>()
+            .HasOne(b => b.Book)
             .WithMany()
-            .HasForeignKey(b => b.book_id)
+            .HasForeignKey(b => b.BookId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        base.OnModelCreating(modelBuilder);
     }
 }
