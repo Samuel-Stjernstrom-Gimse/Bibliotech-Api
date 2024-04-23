@@ -18,14 +18,9 @@ public class UserController(LocalDbContext context) : Controller
     [HttpPost]
     public IActionResult PostUser([FromBody] User user)
     {
-        var password = user.Password;
-        var bytes = Encoding.UTF8.GetBytes(password);
-        var hashedPassword = Convert.ToBase64String(bytes);
-        user.Password = hashedPassword;
-        
         context.users.Add(user);
         context.SaveChanges();
-        
+
         return Ok(user);
     }
 
@@ -48,7 +43,7 @@ public class UserController(LocalDbContext context) : Controller
 
         return Ok(existingUser);
     }
-    
+
     [HttpPatch]
     [Route("{id:int}/password")]
     public IActionResult PatchPassword([FromBody] string password, [FromRoute] int id)
@@ -68,7 +63,7 @@ public class UserController(LocalDbContext context) : Controller
 
         return Ok(user);
     }
-    
+
     [HttpPatch]
     [Route("{id:int}/email")]
     public IActionResult PatchEmail([FromBody] string email, [FromRoute] int id)
@@ -86,7 +81,25 @@ public class UserController(LocalDbContext context) : Controller
 
         return Ok(user);
     }
-    
+
+    [HttpPatch]
+    [Route("{id:int}/username")]
+    public IActionResult PatchUsername([FromBody] string username, [FromRoute] int id)
+    {
+        var user = context.users.FirstOrDefault(u => u.Id == id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        user.Username = username;
+
+        context.SaveChanges();
+
+        return Ok(user);
+    }
+
     [HttpDelete]
     [Route("{id:int}")]
     public IActionResult DeleteUser([FromRoute] int id)
@@ -103,5 +116,4 @@ public class UserController(LocalDbContext context) : Controller
 
         return Ok();
     }
-    
 }
